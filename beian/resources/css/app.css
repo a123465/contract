@@ -9,3 +9,97 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* Custom auth & UI styles using Tailwind's @apply (requires Tailwind/PostCSS build)
+   These provide consistent inputs, buttons and avatar placeholders used by auth views.
+*/
+
+.container-center {
+    @apply min-h-screen flex items-center justify-center bg-gray-100;
+}
+
+.auth-card {
+    @apply w-full max-w-md p-6 bg-white rounded shadow-md;
+}
+
+.auth-input {
+    @apply mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300;
+}
+
+.auth-file {
+    @apply mt-1 block w-full text-sm text-gray-600;
+}
+
+.btn-primary {
+    @apply px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700;
+}
+
+.avatar-placeholder {
+    @apply w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 overflow-hidden;
+}
+
+.muted {
+    @apply text-sm text-gray-600;
+}
+
+/* AJAX 操作 loading spinner */
+.ajax-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-left:8px;vertical-align:middle}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* Modal basic styles (UI dialogs) */
+#ui-modal{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+
+/* Toast container handled inline in JS; keep global visual tuning here */
+#ui-toast-wrap div{min-width:120px}
+
+/* Global navigation styles (left-center-right layout similar to weibo) */
+.global-nav{background:#fff;border-bottom:1px solid #e6e6e6}
+.global-nav .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:8px 16px;gap:12px}
+.nav-left{display:flex;align-items:center;gap:10px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit}
+.brand-logo{width:36px;height:36px;object-fit:contain}
+.brand-text{font-weight:600;font-size:16px}
+.nav-center{flex:1;display:flex;align-items:center;justify-content:center;gap:20px}
+.nav-links{display:flex;gap:16px;list-style:none;margin:0;padding:0}
+.nav-links a{color:#111;text-decoration:none;padding:6px 8px;border-radius:6px}
+.nav-links a:hover{background:#f3f4f6}
+.nav-search{min-width:220px}
+.nav-search-input{width:100%;padding:8px 10px;border-radius:999px;border:1px solid #e5e7eb}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-actions{display:flex;gap:8px}
+.nav-btn{padding:6px 10px;border-radius:8px;text-decoration:none;color:#111;border:1px solid transparent}
+.nav-btn-primary{background:#2563eb;color:#fff}
+.nav-user{display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit}
+.nav-avatar{width:36px;height:36px;border-radius:9999px;object-fit:cover}
+.nav-avatar.placeholder{display:flex;align-items:center;justify-content:center;background:#eef2ff;color:#2563eb}
+.nav-username{font-size:14px}
+
+@media (max-width:900px){
+    .nav-center{display:none}
+    .nav-search{display:none}
+}
+
+/* UI 模态与吐司本地化样式（追加） */
+.ui-modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;pointer-events:none}
+.ui-modal-backdrop{position:absolute;inset:0;background:rgba(2,6,23,0.56);opacity:0;transition:opacity .22s ease}
+.ui-modal-dialog{position:relative;max-width:520px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 12px 40px rgba(2,6,23,0.12);transform:translateY(8px) scale(.995);opacity:0;transition:all .22s cubic-bezier(.2,.9,.2,1);pointer-events:auto}
+.ui-modal-message{padding:20px 20px 10px 20px;color:#111;font-size:16px;line-height:1.6}
+.ui-modal-actions{display:flex;gap:8px;justify-content:flex-end;padding:12px;border-top:1px solid #f3f4f6;background:#fafafa}
+.ui-btn{padding:8px 12px;border-radius:8px;border:1px solid transparent;cursor:pointer;font-weight:600}
+.ui-btn-cancel{background:#fff;color:#374151;border-color:#e5e7eb}
+.ui-btn-confirm{background:#0b79d0;color:#fff;border-color:#0b79d0}
+.ui-modal-open .ui-modal-backdrop{opacity:1}
+.ui-modal-open .ui-modal-dialog{transform:translateY(0) scale(1);opacity:1}
+
+/* Toast */
+.ui-toast-wrap{position:fixed;top:18px;right:18px;z-index:11000;display:flex;flex-direction:column;gap:10px;max-width:360px;pointer-events:none}
+.ui-toast{background:#111;color:#fff;padding:10px 14px;border-radius:8px;box-shadow:0 8px 30px rgba(2,6,23,0.18);font-size:14px;transform:translateY(-8px);opacity:0;transition:transform .28s cubic-bezier(.2,.9,.2,1),opacity .28s}
+.ui-toast--show{transform:translateY(0);opacity:1}
+.ui-toast--success{background:#10b981}
+.ui-toast--error{background:#ef4444}
+
+@media (max-width:600px){
+    .ui-modal-dialog{margin:0 12px}
+    .ui-toast-wrap{right:12px;left:12px;top:12px}
+}
+

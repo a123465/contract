@@ -23,8 +23,19 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $cnNames = [
+            '王伟','李静','张强','刘洋','陈娜','杨磊','赵敏','黄涛','周杰','吴倩','孙力','胡杰','朱丽','高峰','林芳','田雨','韩梅','郑浩','冯芸','程鹏'
+        ];
+
+        $nicknameSuffix = ['旅行者','背包客','摄影师','吃货','驴友','探店君','慢生活'];
+
+        $name = $this->faker->randomElement($cnNames);
+        $nickname = $name . $this->faker->randomElement($nicknameSuffix);
+
         return [
-            'name' => fake()->name(),
+            'username' => fake()->unique()->userName(),
+            'name' => $name,
+            'nickname' => $nickname,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

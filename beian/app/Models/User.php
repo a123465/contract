@@ -18,9 +18,18 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'username',
         'name',
+        'nickname',
         'email',
         'password',
+        'avatar',
+        'phone',
+        'bio',
+        'birthday',
+        'gender',
+        'occupation',
+        'hometown',
     ];
 
     /**
@@ -43,6 +52,39 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'birthday' => 'date',
         ];
+    }
+
+    /**
+     * 返回头像的可访问 URL（如果有）
+     */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if (! $this->avatar) {
+            return null;
+        }
+
+        return asset('storage/' . ltrim($this->avatar, '/'));
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function likedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'post_likes')->withTimestamps();
+    }
+
+    public function favoritedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'post_favorites')->withTimestamps();
     }
 }
