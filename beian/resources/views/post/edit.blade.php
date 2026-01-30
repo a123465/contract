@@ -305,3 +305,4 @@
     </script>
 </body>
 </html>
+@include('partials.footer')
