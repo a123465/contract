@@ -134,7 +134,7 @@
                                 <li>✅ 高级搜索功能</li>
                             </ul>
                         </div>
-                        <a href="{{ route('membership') }}" class="btn btn-premium" style="width:90%;margin-top:16px">管理会员</a>
+                        <a href="{{ route('membership') }}" class="btn btn-premium" style="width:95%;margin-top:16px">管理会员</a>
                     </div>
                 </div>
                 @endif

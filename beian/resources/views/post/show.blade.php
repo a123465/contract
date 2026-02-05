@@ -30,7 +30,7 @@
     .comments-section{background:var(--card);border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:0 6px 20px rgba(16,24,40,0.06)}
     .comments-title{font-size:20px;font-weight:600;margin-bottom:16px}
     .comment-form{margin-bottom:24px}
-    .comment-input{width:90%;padding:12px;border:1px solid #e5e7eb;border-radius:8px;resize:vertical;min-height:80px}
+    .comment-input{width:95%;padding:12px;border:1px solid #e5e7eb;border-radius:8px;resize:vertical;min-height:80px}
     .comment-submit{background:var(--accent);color:#fff;padding:10px 20px;border:0;border-radius:8px;cursor:pointer}
     .comment-submit:hover{background:#1d4ed8}
     .comment{display:flex;gap:16px;margin-bottom:24px;padding:20px;background:#f8fafc;border-radius:12px;border:1px solid #e5e7eb}

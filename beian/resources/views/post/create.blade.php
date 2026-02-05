@@ -12,7 +12,7 @@
     .card{background:var(--card);border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:0 6px 20px rgba(16,24,40,0.06)}
     .form-group{margin-bottom:20px}
     .form-label{display:block;font-weight:600;margin-bottom:8px;color:#374151}
-    .form-input{width:90%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px}
+    .form-input{width:95%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px}
     .form-textarea{resize:vertical;min-height:120px}
     .form-select{padding:12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;background:#fff}
     .image-preview{margin-top:8px;max-width:200px;border-radius:8px;display:none}

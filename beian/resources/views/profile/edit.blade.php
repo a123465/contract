@@ -89,9 +89,9 @@
                                 @else
                                     <div id="avatar-preview" style="width:96px;height:96px;border-radius:9999px;background:#eef2ff;color:#2563eb;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:28px;border:4px solid #fff;box-shadow:0 4px 12px rgba(16,24,40,0.08);transition:opacity 0.2s">{{ strtoupper(substr($user->username ?? 'U',0,1)) }}</div>
                                 @endif
-                                <div style="position:absolute;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;color:white;font-size:12px;font-weight:500">
+                                <!-- <div style="position:absolute;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;color:white;font-size:12px;font-weight:500">
                                     点击更换头像
-                                </div>
+                                </div> -->
                             </div>
                             <input type="file" name="avatar" id="avatar-input" accept="image/*" style="display:none">
                             <div style="margin-top:8px;color:#6b7280;font-size:13px">点击头像区域选择图片，支持 JPG、PNG、GIF 格式，文件大小不超过 2MB</div>
