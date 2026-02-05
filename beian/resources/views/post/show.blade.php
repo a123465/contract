@@ -63,7 +63,7 @@
                     </div>
                 @endif
                 <div class="author-details">
-                    <div class="author-name">{{ $post->user->nickname ?? $post->user->name }}</div>
+                    <div class="author-name">{{ $post->user->nickname ?? $post->user->name }} @if($post->user->isMember())<span class="member-badge" title="会员用户">👑</span>@endif</div>
                     <div class="author-meta">
                         <span>{{ $post->created_at->diffForHumans() }}</span>
                         <span class="post-category">{{ $post->category }}</span>

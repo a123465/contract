@@ -132,7 +132,7 @@
                                         </div>
                                     @endif
                                     <div class="post-info">
-                                        <div class="post-author">{{ $post->user->nickname ?? $post->user->name }}</div>
+                                        <div class="post-author">{{ $post->user->nickname ?? $post->user->name }} @if($post->user->isMember())<span class="member-badge" title="会员用户">👑</span>@endif</div>
                                         <div class="post-time">{{ $post->created_at->diffForHumans() }} · {{ $post->category }}</div>
                                     </div>
                                 </div>

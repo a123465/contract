@@ -56,7 +56,7 @@
         @else
             <div class="card" style="background:#f0fdf4;border:1px solid #22c55e">
                 <h3 style="color:#166534;margin-top:0">会员特权</h3>
-                <p style="color:#166534;margin-bottom:0">你已发布 <strong>{{ $postCount }}</strong> 条帖子。作为会员，你可以无限发布内容！</p>
+                <p style="color:#166534;margin-bottom:0">你本月已发布 <strong>{{ $monthlyPostCount }}</strong> 条帖子。作为会员，你可以无限发布内容！</p>
             </div>
         @endif
 
