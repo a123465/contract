@@ -84,6 +84,21 @@
             border: 1px solid #e5e7eb
         }
 
+        .nav-search-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: rgba(37, 99, 235, 0.1);
+            transition: all 0.2s;
+        }
+
+        .nav-search-link:hover {
+            background: rgba(37, 99, 235, 0.2);
+        }
+
         .nav-right {
             display: flex;
             align-items: center;
@@ -143,6 +158,19 @@
 
         .nav-username {
             font-size: 14px
+        }
+
+        .member-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 50%;
+            font-size: 10px;
+            margin-left: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         @media (max-width:900px) {
@@ -241,7 +269,12 @@
                 <li><a href="/">首页</a></li>
                 <li><a href="{{ route('discovery') }}">发现</a></li>
                 <li><a href="{{ route('posts.create') }}">发布</a></li>
-                <li><a href="/profile">我的</a></li>
+                @auth
+                @if(auth()->user()->isMember())
+                <li><a href="{{ route('search') }}">搜索</a></li>
+                @endif
+                @endauth
+                <li><a href="{{ route('profile') }}">我的</a></li>
             </ul>
             <!-- <div class="nav-search">
                 <form action="/search" method="GET">
@@ -264,6 +297,9 @@
                 <div class="nav-avatar placeholder">{{ strtoupper(substr(optional(auth()->user())->username ?? 'U',0,1)) }}</div>
                 @endif
                 <span class="nav-username">{{ optional(auth()->user())->nickname ?? optional(auth()->user())->username }}</span>
+                @if(optional(auth()->user())->isMember())
+                <span class="member-badge" title="会员用户">👑</span>
+                @endif
             </a>
             <form method="POST" action="{{ route('logout') }}" class="nav-form-inline">
                 @csrf
@@ -283,14 +319,19 @@
                 <li><a href="/">首页</a></li>
                 <li><a href="{{ route('discovery') }}">发现</a></li>
                 <li><a href="{{ route('posts.create') }}">发布</a></li>
-                <li><a href="/profile">我的</a></li>
+                @auth
+                @if(auth()->user()->isMember())
+                <li><a href="{{ route('search') }}">搜索</a></li>
+                @endif
+                @endauth
+                <li><a href="{{ route('profile') }}">我的</a></li>
             </ul>
             <!-- <div style="margin-top:10px">
                 <form action="/search" method="GET">
                     <input name="q" type="search" placeholder="搜索..." style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid #e5e7eb" />
                 </form>
             </div> -->
-            <div style="margin-top:12px;">
+            <!-- <div style="margin-top:12px;">
                 @auth
                 <a href="{{ route('home') }}" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:inherit">
                     @if(optional(auth()->user())->avatar)
@@ -299,6 +340,9 @@
                     <div style="width:36px;height:36px;border-radius:9999px;background:#eef2ff;color:#2563eb;display:flex;align-items:center;justify-content:center">{{ strtoupper(substr(optional(auth()->user())->username ?? 'U',0,1)) }}</div>
                     @endif
                     <span>{{ optional(auth()->user())->nickname ?? optional(auth()->user())->username }}</span>
+                    @if(optional(auth()->user())->isMember())
+                    <span class="member-badge" title="会员用户" style="width:14px;height:14px;font-size:8px;">👑</span>
+                    @endif
                 </a>
                 <form method="POST" action="{{ route('logout') }}" style="display:inline;margin-left:8px">
                     @csrf
@@ -310,7 +354,7 @@
                     <a href="{{ route('register') }}" class="nav-btn nav-btn-primary">注册</a>
                 </div>
                 @endauth
-            </div>
+            </div> -->
         </div>
     </div>
     <script>

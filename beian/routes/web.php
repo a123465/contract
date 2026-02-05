@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\DiscoveryController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MembershipController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -20,12 +24,11 @@ Route::get('/home', function () {
     return view('home');
 })->middleware('auth')->name('home');
 
-// discovery route
-use App\Http\Controllers\DiscoveryController;
-Route::get('/discovery', [DiscoveryController::class, 'index'])->name('discovery');
+// search route (member only)
+Route::get('/search', [DiscoveryController::class, 'search'])->middleware(['auth', 'membership'])->name('search');
 
-// post routes
-use App\Http\Controllers\PostController;
+// discovery route
+Route::get('/discovery', [DiscoveryController::class, 'index'])->name('discovery');
 Route::get('/posts/create', [PostController::class, 'create'])->middleware('auth')->name('posts.create');
 Route::post('/posts', [PostController::class, 'store'])->middleware('auth')->name('posts.store');
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
@@ -38,11 +41,13 @@ Route::post('/posts/{post}/like', [PostController::class, 'toggleLike'])->middle
 Route::post('/posts/{post}/favorite', [PostController::class, 'toggleFavorite'])->middleware('auth')->name('posts.favorite');
 
 // profile routes
-use App\Http\Controllers\ProfileController;
-
 Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile');
 Route::get('/profile/edit', [ProfileController::class, 'edit'])->middleware('auth')->name('profile.edit');
 Route::post('/profile/edit', [ProfileController::class, 'updateProfile'])->middleware('auth')->name('profile.update');
 Route::get('/profile/security', [ProfileController::class, 'security'])->middleware('auth')->name('profile.security');
 Route::post('/profile/security/password', [ProfileController::class, 'updatePassword'])->middleware('auth')->name('profile.password');
 Route::post('/profile/security/phone', [ProfileController::class, 'bindPhone'])->middleware('auth')->name('profile.phone');
+
+// membership routes
+Route::get('/membership', [MembershipController::class, 'show'])->name('membership');
+Route::post('/membership/subscribe', [MembershipController::class, 'subscribe'])->middleware('auth')->name('membership.subscribe');

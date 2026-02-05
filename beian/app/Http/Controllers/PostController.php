@@ -106,6 +106,20 @@ class PostController extends Controller
             'media.*.max' => '单个文件不能超过 10MB。',
         ]);
 
+        // 检查非会员用户的帖子数量限制（每月10条）
+        $user = Auth::user();
+        if (!$user->isMember()) {
+            $currentMonth = now()->month;
+            $currentYear = now()->year;
+            $monthlyPostCount = $user->posts()
+                ->whereMonth('created_at', $currentMonth)
+                ->whereYear('created_at', $currentYear)
+                ->count();
+            if ($monthlyPostCount >= 10) {
+                return back()->withErrors(['general' => '免费用户每月最多只能发布10条帖子。如需发布更多内容，请升级为会员。']);
+            }
+        }
+
         $post = Post::create([
             'user_id' => Auth::id(),
             'title' => $request->title,

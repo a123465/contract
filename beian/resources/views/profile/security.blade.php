@@ -1,24 +1,76 @@
 <!doctype html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>账号安全</title>
     @include('partials.profile-styles')
 </head>
+
 <body>
     @include('partials.navbar')
     <div class="page">
         <div class="profile-header">
             @if($user->avatar)
-                <img src="{{ $user->avatar_url }}" alt="avatar" class="avatar-large">
+            <img src="{{ $user->avatar_url }}" alt="avatar" class="avatar-large">
             @else
-                <div class="avatar-placeholder">{{ strtoupper(substr($user->username ?? 'U',0,1)) }}</div>
+            <div class="avatar-placeholder">{{ strtoupper(substr($user->username ?? 'U',0,1)) }}</div>
             @endif
-            <div>
-                <h2 style="margin:0">{{ $user->nickname ?? $user->username }}</h2>
-                <div class="muted" style="margin-top:6px">账号安全中心</div>
+
+            <div class="profile-meta">
+                <div class="profile-title-section">
+                    <h1>{{ $user->nickname ?? $user->username }} {{ $user->hometown ? '· '.$user->hometown : '' }}
+                        @if($user->isMember())
+                        <span class="member-badge" title="会员用户">👑</span>
+                        @endif
+                    </h1>
+
+                </div>
+
+                @if(!$user->isMember())
+                <div class="membership-cta">
+                    <a href="{{ route('membership') }}" class="btn btn-outline-premium" style="border:2px solid #f59e0b;background:#fff;color:#f59e0b;padding:10px 20px;text-decoration:none;border-radius:8px;font-weight:500;display:inline-block;position:relative;z-index:10;">成为会员</a>
+                </div>
+                @endif
+
+                <div class="profile-info">
+                    <div class="muted">{{ $user->occupation ?? '' }}</div>
+                    <div class="bio">{{ $user->bio ?? '这位用户很懒，未填写简介。' }}</div>
+                </div>
+
+                @if($user->isMember())
+                <div class="member-status">
+                    <span class="member-label">会员用户</span>
+                    <span class="member-plan">{{ ucfirst($user->membership->plan) }}会员</span>
+                    @if($user->membership->expires_at)
+                    <span class="member-expiry">到期: {{ $user->membership->expires_at->format('Y-m-d') }}</span>
+                    @endif
+                </div>
+                @endif
+
+                <div class="stat-list">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ $user->posts->count() }}</div>
+                        <div class="stat-label">分享</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ $user->likedPosts->count() }}</div>
+                        <div class="stat-label">点赞</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ $user->favoritedPosts->count() }}</div>
+                        <div class="stat-label">收藏</div>
+                    </div>
+                    @if($user->isMember())
+                    <div class="stat-item">
+                        <div class="stat-number">{{ $user->comments->count() }}</div>
+                        <div class="stat-label">评论</div>
+                    </div>
+                    @endif
+                </div>
             </div>
+
             <div class="profile-actions">
                 <button type="button" class="btn btn-ghost" onclick="location.href='{{ route('profile') }}'">查看主页</button>
             </div>
@@ -42,28 +94,44 @@
                         </div>
                     </form>
                     <script>
-                    (function(){
-                        var form = document.getElementById('change-password-form');
-                        if(!form) return;
-                        var pw = document.getElementById('new-password');
-                        var pwc = document.getElementById('new-password-confirm');
-                        var pwHelp = document.getElementById('pw-help');
-                        var pwOrig = pwHelp ? pwHelp.textContent : '';
-                        var regex = /^(?=.*[A-Za-z])(?=.*\\d).{8,16}$/;
+                        (function() {
+                            var form = document.getElementById('change-password-form');
+                            if (!form) return;
+                            var pw = document.getElementById('new-password');
+                            var pwc = document.getElementById('new-password-confirm');
+                            var pwHelp = document.getElementById('pw-help');
+                            var pwOrig = pwHelp ? pwHelp.textContent : '';
+                            var regex = /^(?=.*[A-Za-z])(?=.*\\d).{8,16}$/;
 
-                        function validate(){
-                            if(!pw) return true;
-                            var ok = true;
-                            if(!regex.test(pw.value || '')){ ok = false; if(pwHelp){ pwHelp.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="10" fill="#ef4444"/><path d="M8 8 L16 16 M16 8 L8 16" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg> 密码需为 8-16 位，且至少包含字母和数字。'; pwHelp.style.color = '#b91c1c'; } }
-                            else if(pw.value !== (pwc?.value || '')){ ok = false; if(pwHelp){ pwHelp.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="10" fill="#ef4444"/><path d="M8 8 L16 16 M16 8 L8 16" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg> 两次输入的密码不一致'; pwHelp.style.color = '#b91c1c'; } }
-                            if(ok && pwHelp){ pwHelp.textContent = pwOrig; pwHelp.style.color = ''; }
-                            return ok;
-                        }
+                            function validate() {
+                                if (!pw) return true;
+                                var ok = true;
+                                if (!regex.test(pw.value || '')) {
+                                    ok = false;
+                                    if (pwHelp) {
+                                        pwHelp.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="10" fill="#ef4444"/><path d="M8 8 L16 16 M16 8 L8 16" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg> 密码需为 8-16 位，且至少包含字母和数字。';
+                                        pwHelp.style.color = '#b91c1c';
+                                    }
+                                } else if (pw.value !== (pwc?.value || '')) {
+                                    ok = false;
+                                    if (pwHelp) {
+                                        pwHelp.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="10" fill="#ef4444"/><path d="M8 8 L16 16 M16 8 L8 16" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg> 两次输入的密码不一致';
+                                        pwHelp.style.color = '#b91c1c';
+                                    }
+                                }
+                                if (ok && pwHelp) {
+                                    pwHelp.textContent = pwOrig;
+                                    pwHelp.style.color = '';
+                                }
+                                return ok;
+                            }
 
-                        pw && pw.addEventListener('input', validate);
-                        pwc && pwc.addEventListener('input', validate);
-                        form.addEventListener('submit', function(e){ if(!validate()) e.preventDefault(); });
-                    })();
+                            pw && pw.addEventListener('input', validate);
+                            pwc && pwc.addEventListener('input', validate);
+                            form.addEventListener('submit', function(e) {
+                                if (!validate()) e.preventDefault();
+                            });
+                        })();
                     </script>
                 </div>
 
@@ -71,16 +139,16 @@
                     <h3 style="margin-top:0">最近登录记录</h3>
                     <div style="margin-top:8px">
                         @if($records->isEmpty())
-                            <div class="muted">暂无最近登录记录。</div>
+                        <div class="muted">暂无最近登录记录。</div>
                         @else
-                            <ul style="list-style:none;padding:0;margin:0">
-                                @foreach($records as $rec)
-                                        <li style="padding:8px;border-bottom:1px solid #f3f4f6">
-                                            <div style="font-size:13px">IP: {{ $rec->ip_address ?? '未知' }} · 上次活动: {{ date('Y-m-d H:i:s', $rec->last_activity) }}</div>
-                                            <div class="muted" style="font-size:12px">{{ \Illuminate\Support\Str::limit($rec->user_agent, 120) }}</div>
-                                        </li>
-                                @endforeach
-                            </ul>
+                        <ul style="list-style:none;padding:0;margin:0">
+                            @foreach($records as $rec)
+                            <li style="padding:8px;border-bottom:1px solid #f3f4f6">
+                                <div style="font-size:13px">IP: {{ $rec->ip_address ?? '未知' }} · 上次活动: {{ date('Y-m-d H:i:s', $rec->last_activity) }}</div>
+                                <div class="muted" style="font-size:12px">{{ \Illuminate\Support\Str::limit($rec->user_agent, 120) }}</div>
+                            </li>
+                            @endforeach
+                        </ul>
                         @endif
                     </div>
                 </div>
@@ -96,5 +164,6 @@
         </div>
     </div>
 </body>
+
 </html>
 @include('partials.footer')

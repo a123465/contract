@@ -3,6 +3,7 @@
 use App\Models\Post;
 use App\Models\PostMedia;
 use App\Models\User;
+use App\Models\Membership;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -17,6 +18,12 @@ class PostMediaTest extends TestCase
         Storage::fake('public');
 
         $user = User::factory()->create();
+        Membership::create([
+            'user_id' => $user->id,
+            'plan' => 'basic',
+            'status' => 'active',
+            'expires_at' => now()->addMonth(),
+        ]);
         $this->actingAs($user);
 
         $imageFile = UploadedFile::fake()->image('test-image.jpg');

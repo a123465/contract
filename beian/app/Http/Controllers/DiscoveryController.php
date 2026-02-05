@@ -12,14 +12,25 @@ class DiscoveryController extends Controller
         // 获取当前选中的分类
         $currentCategory = $request->get('category');
 
-        // 按时间排序的帖子（支持分类筛选）
-        $postsQuery = Post::with(['user', 'media', 'likes', 'favorites']);
+        // 按时间排序的帖子（支持分类筛选），会员用户优先
+        $postsQuery = Post::with(['user', 'media', 'likes', 'favorites'])
+            ->leftJoin('memberships', function($join) {
+                $join->on('posts.user_id', '=', 'memberships.user_id')
+                     ->where('memberships.status', '=', 'active')
+                     ->where(function($query) {
+                         $query->whereNull('memberships.expires_at')
+                               ->orWhere('memberships.expires_at', '>', now());
+                     });
+            })
+            ->select('posts.*')
+            ->orderByRaw('CASE WHEN memberships.id IS NOT NULL THEN 0 ELSE 1 END')
+            ->orderBy('posts.created_at', 'desc');
 
         if ($currentCategory && $currentCategory !== 'all') {
-            $postsQuery->where('category', $currentCategory);
+            $postsQuery->where('posts.category', $currentCategory);
         }
 
-        $posts = $postsQuery->latest()->paginate(12);
+        $posts = $postsQuery->paginate(12);
 
         // 点赞最多的前10条
         $mostLikedPosts = Post::with(['user', 'media'])
@@ -69,5 +80,41 @@ class DiscoveryController extends Controller
         }
 
         return view('discovery', compact('posts', 'mostLikedPosts', 'mostFavoritedPosts', 'suggestedUsers', 'categories', 'currentCategory'));
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('q');
+        $category = $request->get('category', 'all');
+
+        $postsQuery = Post::with(['user', 'media', 'likes', 'favorites']);
+
+        if ($query) {
+            $postsQuery->where(function($q) use ($query) {
+                $q->where('title', 'like', "%{$query}%")
+                  ->orWhere('content', 'like', "%{$query}%")
+                  ->orWhereHas('user', function($userQuery) use ($query) {
+                      $userQuery->where('username', 'like', "%{$query}%")
+                               ->orWhere('nickname', 'like', "%{$query}%");
+                  });
+            });
+        }
+
+        if ($category && $category !== 'all') {
+            $postsQuery->where('category', $category);
+        }
+
+        $posts = $postsQuery->latest()->paginate(12);
+
+        $categories = [
+            'all' => '全部内容',
+            '城市旅行' => '城市旅行',
+            '户外冒险' => '户外冒险',
+            '海滩度假' => '海滩度假',
+            '文化体验' => '文化体验',
+            '美食探索' => '美食探索',
+        ];
+
+        return view('search', compact('posts', 'categories', 'query', 'category'));
     }
 }

@@ -12,7 +12,7 @@
     .card{background:var(--card);border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:0 6px 20px rgba(16,24,40,0.06)}
     .form-group{margin-bottom:20px}
     .form-label{display:block;font-weight:600;margin-bottom:8px;color:#374151}
-    .form-input{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px}
+    .form-input{width:90%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px}
     .form-textarea{resize:vertical;min-height:120px}
     .form-select{padding:12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;background:#fff}
     .image-preview{margin-top:8px;max-width:200px;border-radius:8px;display:none}
@@ -29,6 +29,36 @@
     @include('partials.navbar')
     <div class="container">
         <h1 style="text-align:center;margin-bottom:32px">分享你的旅行故事</h1>
+
+        @php
+            $user = auth()->user();
+            $currentMonth = now()->month;
+            $currentYear = now()->year;
+            $monthlyPostCount = $user->posts()
+                ->whereMonth('created_at', $currentMonth)
+                ->whereYear('created_at', $currentYear)
+                ->count();
+            $isMember = $user->isMember();
+        @endphp
+
+        @if(!$isMember)
+            <div class="card" style="background:#f0f9ff;border:1px solid #0ea5e9">
+                <h3 style="color:#0c4a6e;margin-top:0">免费用户发布限制</h3>
+                <p style="color:#0c4a6e;margin-bottom:0">
+                    本月已发布 <strong>{{ $monthlyPostCount }}</strong> / 10 条帖子。
+                    @if($monthlyPostCount >= 10)
+                        达到月发布上限！<a href="{{ route('membership') }}" style="color:#0ea5e9;text-decoration:underline">升级会员</a> 解除限制。
+                    @else
+                        还可发布 <strong>{{ 10 - $monthlyPostCount }}</strong> 条。<a href="{{ route('membership') }}" style="color:#0ea5e9;text-decoration:underline">升级会员</a> 享受无限发布。
+                    @endif
+                </p>
+            </div>
+        @else
+            <div class="card" style="background:#f0fdf4;border:1px solid #22c55e">
+                <h3 style="color:#166534;margin-top:0">会员特权</h3>
+                <p style="color:#166534;margin-bottom:0">你已发布 <strong>{{ $postCount }}</strong> 条帖子。作为会员，你可以无限发布内容！</p>
+            </div>
+        @endif
 
         @if(session('success'))
             <div class="alert">{{ session('success') }}</div>

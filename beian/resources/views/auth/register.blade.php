@@ -11,7 +11,7 @@
     .page-center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
     .auth-card{width:100%;max-width:420px;background:var(--card);border-radius:12px;padding:24px;box-shadow:0 8px 24px rgba(16,24,40,0.08)}
     .auth-card h1{margin:0 0 12px;font-size:22px}
-    .input{width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:14px}
+    .input{width:90%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:14px}
     .file-input{font-size:13px;color:var(--muted)}
     .button-primary{background:var(--accent);color:#fff;padding:10px 14px;border-radius:8px;border:0;cursor:pointer}
     .button-primary:hover{background:#1e40af}

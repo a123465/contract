@@ -15,11 +15,60 @@
             @else
                 <div class="avatar-placeholder">{{ strtoupper(substr($user->username ?? 'U',0,1)) }}</div>
             @endif
-            <div>
-                <h2 style="margin:0">{{ $user->nickname ?? $user->username }}</h2>
-                <div class="muted" style="margin-top:6px">{{ $user->occupation ?? '' }} {{ $user->hometown ? '· '.$user->hometown : '' }}</div>
+
+            <div class="profile-meta">
+                <div class="profile-title-section">
+                    <h1>{{ $user->nickname ?? $user->username }} {{ $user->hometown ? '· '.$user->hometown : '' }}
+                    @if($user->isMember())
+                    <span class="member-badge" title="会员用户">👑</span>
+                    @endif
+                    </h1>
+                </div>
+
+                @if(!$user->isMember())
+                <div class="membership-cta">
+                    <a href="{{ route('membership') }}" class="btn btn-outline-premium" style="border:2px solid #f59e0b;background:#fff;color:#f59e0b;padding:10px 20px;text-decoration:none;border-radius:8px;font-weight:500;display:inline-block;position:relative;z-index:10;">成为会员</a>
+                </div>
+                @endif
+
+                <div class="profile-info">
+                    <div class="muted">{{ $user->occupation ?? '' }}</div>
+                    <div class="bio">{{ $user->bio ?? '这位用户很懒，未填写简介。' }}</div>
+                </div>
+
+                @if($user->isMember())
+                <div class="member-status">
+                    <span class="member-label">会员用户</span>
+                    <span class="member-plan">{{ ucfirst($user->membership->plan) }}会员</span>
+                    @if($user->membership->expires_at)
+                    <span class="member-expiry">到期: {{ $user->membership->expires_at->format('Y-m-d') }}</span>
+                    @endif
+                </div>
+                @endif
+
+                <div class="stat-list">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ $user->posts->count() }}</div>
+                        <div class="stat-label">分享</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ $user->likedPosts->count() }}</div>
+                        <div class="stat-label">点赞</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ $user->favoritedPosts->count() }}</div>
+                        <div class="stat-label">收藏</div>
+                    </div>
+                    @if($user->isMember())
+                    <div class="stat-item">
+                        <div class="stat-number">{{ $user->comments->count() }}</div>
+                        <div class="stat-label">评论</div>
+                    </div>
+                    @endif
+                </div>
             </div>
-           <div class="profile-actions">
+
+            <div class="profile-actions">
                 <button type="button" class="btn btn-ghost" onclick="location.href='{{ route('profile') }}'">查看主页</button>
             </div>
         </div>
@@ -80,7 +129,7 @@
                             <div class="field-row">
                                 <div class="field-label">生日</div>
                                 <div class="field-control">
-                                    <div style="display:flex;gap:8px">
+                                    <div class="birth-selectors">
                                         <select name="birth_year" class="input" style="width:120px">
                                             <option value="">年</option>
                                             @php $yNow = date('Y'); @endphp
@@ -231,6 +280,13 @@
     .field-label{width:120px;color:#6b7280;padding-top:6px}
     .field-control{flex:1}
     .field-control .input{background:#f3f4f6;border:0}
+    @media (max-width:600px){
+        .field-row{flex-direction:column;gap:8px}
+        .field-label{width:100%;font-weight:500;color:#374151}
+        .birth-selectors{display:flex;gap:8px;flex-wrap:wrap}
+        .birth-selectors select{flex:1;min-width:80px}
+        #avatar-upload-area img, #avatar-upload-area div{width:80px !important;height:80px !important;font-size:24px !important}
+    }
     </style>
 </body>
 </html>

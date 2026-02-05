@@ -87,4 +87,19 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Post::class, 'post_favorites')->withTimestamps();
     }
+
+    public function membership()
+    {
+        return $this->hasOne(Membership::class);
+    }
+
+    public function isMember()
+    {
+        return $this->membership && $this->membership->isActive();
+    }
+
+    public function isPremium()
+    {
+        return $this->membership && $this->membership->isPremium();
+    }
 }
