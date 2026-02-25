@@ -23,6 +23,7 @@ class User extends Authenticatable
         'nickname',
         'email',
         'password',
+        'role',
         'avatar',
         'phone',
         'bio',
@@ -96,6 +97,11 @@ class User extends Authenticatable
     public function isMember()
     {
         return $this->membership && $this->membership->isActive();
+    }
+
+    public function isModerator()
+    {
+        return isset($this->role) && in_array($this->role, ['moderator', 'admin']);
     }
 
     public function isPremium()

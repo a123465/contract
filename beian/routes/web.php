@@ -7,6 +7,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\DiscoveryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\ContentReviewController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -51,3 +52,7 @@ Route::post('/profile/security/phone', [ProfileController::class, 'bindPhone'])-
 // membership routes
 Route::get('/membership', [MembershipController::class, 'show'])->name('membership');
 Route::post('/membership/subscribe', [MembershipController::class, 'subscribe'])->middleware('auth')->name('membership.subscribe');
+
+// Content review routes
+Route::post('/reviews', [ContentReviewController::class, 'store'])->middleware('auth')->name('reviews.store');
+Route::post('/reviews/{review}/review', [ContentReviewController::class, 'review'])->middleware('auth')->name('reviews.review');
