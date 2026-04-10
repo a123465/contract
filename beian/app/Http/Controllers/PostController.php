@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
+use App\Models\ContentReview;
 use App\Models\Post;
 use App\Models\PostMedia;
 use Illuminate\Http\Request;
@@ -127,6 +127,14 @@ class PostController extends Controller
             'category' => $request->category,
         ]);
 
+        ContentReview::create([
+            'reviewable_type' => Post::class,
+            'reviewable_id' => $post->id,
+            'reporter_id' => Auth::id(),
+            'status' => 'pending',
+            'reason' => '用户发布新帖子，等待审核',
+        ]);
+
         if ($request->hasFile('media')) {
             $sortOrder = 0;
             foreach ($request->file('media') as $file) {
@@ -145,7 +153,7 @@ class PostController extends Controller
             }
         }
 
-        return redirect()->route('discovery')->with('success', '旅行分享发布成功！');
+        return redirect()->to('/discovery')->with('success', '旅行分享发布成功！');
     }
 
     public function update(Request $request, Post $post)
@@ -194,6 +202,19 @@ class PostController extends Controller
             'category' => $request->category,
         ]);
 
+        $latestReview = $post->reviews()->latest()->first();
+        if ($latestReview) {
+            $latestReview->update(['status' => 'pending', 'reason' => '帖子已编辑，重新进入审核流程']);
+        } else {
+            ContentReview::create([
+                'reviewable_type' => Post::class,
+                'reviewable_id' => $post->id,
+                'reporter_id' => Auth::id(),
+                'status' => 'pending',
+                'reason' => '帖子已编辑，等待审核',
+            ]);
+        }
+
         // 处理新上传的媒体（保留已有的媒体）
         if ($request->hasFile('media')) {
             $sortOrder = ($post->media()->max('sort_order') ?? -1) + 1;
@@ -218,24 +239,15 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
-        $post->load(['user', 'comments.user', 'likes', 'favorites']);
+        $post->load(['user', 'likes', 'favorites', 'latestReview']);
+
+        if (!Auth::check() || Auth::id() !== $post->user_id) {
+            if (!$post->isApproved()) {
+                abort(404);
+            }
+        }
 
         return view('post.show', compact('post'));
-    }
-
-    public function storeComment(Request $request, Post $post)
-    {
-        $request->validate([
-            'content' => 'required|string|max:1000',
-        ]);
-
-        Comment::create([
-            'user_id' => Auth::id(),
-            'post_id' => $post->id,
-            'content' => $request->content,
-        ]);
-
-        return back()->with('success', '评论发表成功！');
     }
 
     public function toggleLike(Post $post)

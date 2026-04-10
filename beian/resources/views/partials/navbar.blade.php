@@ -473,10 +473,12 @@
             <ul class="nav-links">
                 <li><a href="/">首页</a></li>
                 <li><a href="{{ route('discovery') }}">发现</a></li>
+                <li><a href="{{ route('about') }}">关于我们</a></li>
                 <li><a href="{{ route('posts.create') }}">发布</a></li>
                 @auth
-                @if(auth()->user()->isMember())
                 <li><a href="{{ route('search') }}">搜索</a></li>
+                @if(auth()->user()->isModerator())
+                <li><a href="{{ route('reviews.index') }}">审核管理</a></li>
                 @endif
                 @endauth
                 <li><a href="{{ route('profile') }}">我的</a></li>
@@ -502,9 +504,6 @@
                 <div class="nav-avatar placeholder">{{ strtoupper(substr(optional(auth()->user())->username ?? 'U',0,1)) }}</div>
                 @endif
                 <span class="nav-username">{{ optional(auth()->user())->nickname ?? optional(auth()->user())->username }}</span>
-                @if(optional(auth()->user())->isMember())
-                <span class="member-badge" title="会员用户">👑</span>
-                @endif
             </a>
             <form method="POST" action="{{ route('logout') }}" class="nav-form-inline">
                 @csrf
@@ -532,7 +531,6 @@
                         <div class="mobile-username">{{ optional(auth()->user())->nickname ?? optional(auth()->user())->username }}</div>
                         <div class="mobile-user-role">
                             @if(optional(auth()->user())->isMember())
-                            <span class="mobile-member-badge" title="会员用户">👑</span> 会员用户
                             @else
                             普通用户
                             @endif
@@ -559,10 +557,14 @@
             <ul class="mobile-nav-links">
                 <li><a href="/">🏠 首页</a></li>
                 <li><a href="{{ route('discovery') }}">🔍 发现</a></li>
+                <li><a href="{{ route('about') }}">ℹ️ 关于</a></li>
                 <li><a href="{{ route('posts.create') }}">📝 发布</a></li>
                 @auth
                 @if(auth()->user()->isMember())
                 <li><a href="{{ route('search') }}">🔎 搜索</a></li>
+                @endif
+                @if(auth()->user()->isModerator())
+                <li><a href="{{ route('reviews.index') }}">🛠️ 审核管理</a></li>
                 @endif
                 @endauth
                 <li><a href="{{ route('profile') }}">👤 我的</a></li>

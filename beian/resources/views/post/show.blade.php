@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $post->title }} - 旅行分享</title>
-    <link rel="stylesheet" href="/build/assets/app.css">
+    <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
     <style>
     :root{--bg:#f8fafc;--card:#ffffff;--accent:#2563eb;--muted:#6b7280;--success:#10b981;--danger:#ef4444}
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;background:var(--bg)}
@@ -27,21 +27,6 @@
     .action-btn:hover{background:#f9fafb}
     .action-btn.liked{background:#fef2f2;color:var(--danger);border-color:var(--danger)}
     .action-btn.favorited{background:#fefce8;color:#f59e0b;border-color:#f59e0b}
-    .comments-section{background:var(--card);border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:0 6px 20px rgba(16,24,40,0.06)}
-    .comments-title{font-size:20px;font-weight:600;margin-bottom:16px}
-    .comment-form{margin-bottom:24px}
-    .comment-input{width:95%;padding:12px;border:1px solid #e5e7eb;border-radius:8px;resize:vertical;min-height:80px}
-    .comment-submit{background:var(--accent);color:#fff;padding:10px 20px;border:0;border-radius:8px;cursor:pointer}
-    .comment-submit:hover{background:#1d4ed8}
-    .comment{display:flex;gap:16px;margin-bottom:24px;padding:20px;background:#f8fafc;border-radius:12px;border:1px solid #e5e7eb}
-    .comment:last-child{margin-bottom:0}
-    .comment-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-    .comment-avatar-placeholder{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:16px;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-    .comment-content{flex:1}
-    .comment-header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
-    .comment-author{font-weight:600;font-size:15px;color:#111}
-    .comment-time{color:#6b7280;font-size:12px}
-    .comment-text{line-height:1.6;color:#374151}
     .alert{background:#fef3c7;color:#92400e;padding:12px;border-radius:8px;margin-bottom:16px;border:1px solid #fbbf24}
     /* 固定主媒体区域高度，防止切换时页面跳动 */
     #media-main{height:420px;max-height:600px;border-radius:8px;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
@@ -54,6 +39,16 @@
     <div class="container">
         <article class="post-header">
             <h1 class="post-title">{{ $post->title }}</h1>
+            @if(Auth::check() && Auth::id() === $post->user_id && !$post->isApproved())
+                <div class="alert">
+                    当前帖子尚未通过审核：{{ match($post->review_status) {
+                        'rejected' => '已驳回，请检查内容并修改后重新提交。',
+                        'auto-flagged' => '已被系统自动标记，请等待人工复审。',
+                        'removed' => '内容已被移除，无法展示。',
+                        default => '审核中，审核通过后将会对外展示。',
+                    } }}
+                </div>
+            @endif
             <div class="author-info">
                 @if($post->user->avatar)
                     <img src="{{ $post->user->avatar_url }}" alt="{{ $post->user->nickname ?? $post->user->name }}" class="author-avatar">
@@ -284,51 +279,8 @@
                         ⭐ {{ $post->favorites->count() }}
                     </a>
                 @endauth
-
-                <span class="action-btn">
-                    💬 {{ $post->comments->count() }}
-                </span>
             </div>
         </article>
-
-        <section class="comments-section">
-            <h2 class="comments-title">评论 ({{ $post->comments->count() }})</h2>
-
-            @if(session('success'))
-                <div class="alert">{{ session('success') }}</div>
-            @endif
-
-            @auth
-                <form method="POST" action="{{ route('posts.comments.store', $post) }}" class="comment-form">
-                    @csrf
-                    <textarea name="content" placeholder="写下你的评论..." class="comment-input" required></textarea>
-                    <button type="submit" class="comment-submit">发表评论</button>
-                </form>
-            @else
-                <p style="color:var(--muted)">请 <a href="{{ route('login') }}">登录</a> 后发表评论</p>
-            @endauth
-
-            <div class="comments-list">
-                @foreach($post->comments as $comment)
-                    <div class="comment">
-                        @if($comment->user->avatar)
-                            <img src="{{ $comment->user->avatar_url }}" alt="{{ $comment->user->nickname ?? $comment->user->name }}" class="comment-avatar">
-                        @else
-                            <div class="comment-avatar-placeholder">
-                                {{ strtoupper(substr($comment->user->nickname ?? $comment->user->name, 0, 1)) }}
-                            </div>
-                        @endif
-                        <div class="comment-content">
-                            <div class="comment-header">
-                                <div class="comment-author">{{ $comment->user->nickname ?? $comment->user->name }}</div>
-                                <div class="comment-time">{{ $comment->created_at->diffForHumans() }}</div>
-                            </div>
-                            <div class="comment-text">{{ $comment->content }}</div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </section>
     </div>
 </body>
 </html>

@@ -59,12 +59,6 @@
                         <div class="stat-number">{{ $user->favoritedPosts->count() }}</div>
                         <div class="stat-label">收藏</div>
                     </div>
-                    @if($user->isMember())
-                    <div class="stat-item">
-                        <div class="stat-number">{{ $user->comments->count() }}</div>
-                        <div class="stat-label">评论</div>
-                    </div>
-                    @endif
                 </div>
             </div>
 

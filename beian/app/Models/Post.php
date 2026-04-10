@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use App\Models\ContentReview;
 
 class Post extends Model
 {
@@ -47,6 +50,35 @@ class Post extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function reviews(): MorphMany
+    {
+        return $this->morphMany(ContentReview::class, 'reviewable');
+    }
+
+    public function latestReview(): MorphOne
+    {
+        return $this->morphOne(ContentReview::class, 'reviewable')->latestOfMany();
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where(function ($query) {
+            $query->whereHas('latestReview', function ($q) {
+                $q->where('status', 'approved');
+            })->orWhereDoesntHave('latestReview');
+        });
+    }
+
+    public function getReviewStatusAttribute(): string
+    {
+        return $this->latestReview?->status ?? 'approved';
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->review_status === 'approved';
     }
 
     public function likes(): BelongsToMany

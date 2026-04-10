@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>会员中心</title>
-    <link rel="stylesheet" href="/build/assets/app.css">
+    <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
     <style>
     :root {
         --bg: #f8fafc;
@@ -413,7 +413,7 @@
     <div class="hero-section">
         <div class="hero-content">
             <h1 class="hero-title">会员中心</h1>
-            <p class="hero-subtitle">解锁更多精彩功能，成为我们的尊贵会员</p>
+            <p class="hero-subtitle">会员订阅为平台技术服务费，用于保障您的内容发布、展示与审核管理能力。</p>
         </div>
     </div>
 
@@ -449,7 +449,7 @@
         @elseif($user)
             <div class="plans-section">
                 <h2 class="plans-title">选择您的会员计划</h2>
-                <p class="plans-subtitle">加入会员，享受专属特权和无限可能</p>
+                <p class="plans-subtitle">支付技术服务费，继续使用发布与管理服务，并保持平台信息发布能力。</p>
 
                 <form id="subscriptionForm" action="{{ route('membership.subscribe') }}" method="POST">
                     @csrf
@@ -469,7 +469,7 @@
 
                             <ul class="plan-features">
                                 <li class="feature-item">无限发布旅行帖子</li>
-                                <li class="feature-item">高级评论功能</li>
+                                <li class="feature-item">优先内容审核与展示支持</li>
                                 <li class="feature-item">优先内容展示</li>
                                 <li class="feature-item">基础数据统计</li>
                                 <li class="feature-item">专属会员标识</li>

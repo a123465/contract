@@ -72,4 +72,16 @@ body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",
 .membership-price .price{font-size:32px;font-weight:800;color:#f59e0b}
 .membership-price .price .period{font-size:16px;font-weight:500;color:#d97706}
 .membership-price .price-description{font-size:14px;color:#6b7280;margin-top:4px}
+.post-list{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.post-entry{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px}
+.post-left{display:flex;flex-direction:column;gap:4px;max-width:calc(100% - 120px)}
+.post-link{font-weight:600;color:#111;text-decoration:none}
+.post-link:hover{text-decoration:underline}
+.post-meta{color:#6b7280;font-size:13px}
+.post-status{min-width:90px;text-align:center;font-weight:700;padding:6px 12px;border-radius:9999px;font-size:12px;text-transform:uppercase}
+.status-approved{background:#dcfce7;color:#166534;border:1px solid #86efac}
+.status-pending{background:#fef9c3;color:#92400e;border:1px solid #fde68a}
+.status-rejected{background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5}
+.status-auto-flagged{background:#ffedd5;color:#92400e;border:1px solid #fbbf24}
+.status-removed{background:#f3f4f6;color:#6b7280;border:1px solid #d1d5db}
 </style>

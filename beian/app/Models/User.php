@@ -24,6 +24,10 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'real_name',
+        'id_number',
+        'id_documents',
+        'id_status',
         'avatar',
         'phone',
         'bio',
@@ -54,6 +58,9 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'birthday' => 'date',
+            'id_number' => 'encrypted',
+            'id_documents' => 'array',
+            'id_verified_at' => 'datetime',
         ];
     }
 
@@ -89,23 +96,20 @@ class User extends Authenticatable
         return $this->belongsToMany(Post::class, 'post_favorites')->withTimestamps();
     }
 
-    public function membership()
-    {
-        return $this->hasOne(Membership::class);
-    }
-
-    public function isMember()
-    {
-        return $this->membership && $this->membership->isActive();
-    }
 
     public function isModerator()
     {
         return isset($this->role) && in_array($this->role, ['moderator', 'admin']);
     }
 
-    public function isPremium()
+    public function isMember()
     {
-        return $this->membership && $this->membership->isPremium();
+        return isset($this->role) && $this->role === 'member';
     }
+
+    public function isVerified()
+    {
+        return isset($this->id_status) && $this->id_status === 'verified';
+    }
+
 }

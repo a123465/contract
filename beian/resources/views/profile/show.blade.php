@@ -61,12 +61,6 @@
                         <div class="stat-number">{{ $user->favoritedPosts->count() }}</div>
                         <div class="stat-label">收藏</div>
                     </div>
-                    @if($user->isMember())
-                    <div class="stat-item">
-                        <div class="stat-number">{{ $user->comments->count() }}</div>
-                        <div class="stat-label">评论</div>
-                    </div>
-                    @endif
                 </div>
             </div>
 
@@ -95,6 +89,33 @@
                         <div class="muted">简介</div>
                         <div>{{ $user->bio ?? '无' }}</div>
                     </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-top:0">我的帖子</h3>
+                    @if($posts->isEmpty())
+                        <div class="muted">您还没有发布帖子。</div>
+                    @else
+                        <div class="post-list">
+                            @foreach($posts as $post)
+                                <div class="post-entry">
+                                    <div class="post-left">
+                                        <a href="{{ route('posts.show', $post) }}" class="post-link">{{ $post->title }}</a>
+                                        <div class="post-meta">{{ $post->created_at->format('Y-m-d H:i') }} · {{ $post->category }}</div>
+                                    </div>
+                                    <div class="post-status status-{{ $post->review_status }}">
+                                        {{ match($post->review_status) {
+                                            'approved' => '已通过',
+                                            'rejected' => '已驳回',
+                                            'auto-flagged' => '自动拦截',
+                                            'removed' => '已移除',
+                                            default => '审核中',
+                                        } }}
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
 
                 @if($user->isMember())
@@ -127,7 +148,7 @@
                             <h4>会员特权</h4>
                             <ul>
                                 <li>✅ 无限发布旅行帖子</li>
-                                <li>✅ 高级评论功能</li>
+                                <li>✅ 优先内容审核支持</li>
                                 <li>✅ 优先内容展示</li>
                                 <li>✅ 基础数据统计</li>
                                 <li>✅ 专属会员标识</li>

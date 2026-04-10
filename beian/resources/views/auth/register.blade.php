@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>注册</title>
-    <link rel="stylesheet" href="/build/assets/app.css">
+    <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
     <style>
     :root{--bg:#f3f4f6;--card:#ffffff;--accent:#2563eb;--muted:#6b7280}
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;background:var(--bg)}
@@ -68,11 +68,21 @@
                 <button class="button-primary" type="submit">注册</button>
                 <a href="{{ route('login') }}" class="muted" style="text-decoration:none">已有账号？登录</a>
             </div>
+            <p class="muted" style="margin-top:16px;font-size:13px;line-height:1.6;">
+                注册即表示您已阅读并同意
+                <a href="{{ route('privacy.policy') }}" target="_blank" style="color:inherit;text-decoration:underline;">《隐私政策》</a>
+                、
+                <a href="{{ route('user.agreement') }}" target="_blank" style="color:inherit;text-decoration:underline;">《用户协议》</a>
+                、
+                <a href="{{ route('membership.service') }}" target="_blank" style="color:inherit;text-decoration:underline;">《会员服务协议》</a>
+                和
+                <a href="{{ route('community.guidelines') }}" target="_blank" style="color:inherit;text-decoration:underline;">《社区公约》</a>
+            </p>
         </form>
 
         <script>
     (function(){
-        var form = document.querySelector('form[action="{{ route('register.submit') }}"]');
+        var form = document.querySelector("form[action='{{ route('register.submit') }}']");
         if(!form) return;
         
         var username = form.querySelector('input[name="username"]');

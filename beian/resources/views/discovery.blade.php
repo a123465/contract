@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>发现 - 旅行分享</title>
-    <link rel="stylesheet" href="/build/assets/app.css">
+    <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
     <style>
     :root{--bg:#f8fafc;--card:#ffffff;--accent:#2563eb;--muted:#6b7280}
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;background:var(--bg)}
@@ -154,10 +154,6 @@
                                         <span>{{ $post->likes_count ?? $post->likes->count() }}</span>
                                     </div>
                                     <div class="stat-item">
-                                        <span>💬</span>
-                                        <span>{{ $post->comments->count() }}</span>
-                                    </div>
-                                    <div class="stat-item">
                                         <span>⭐</span>
                                         <span>{{ $post->favorites_count ?? $post->favorites->count() }}</span>
                                     </div>
@@ -240,7 +236,7 @@
                     <div id="suggested-users-list">
                         @forelse($suggestedUsers as $user)
                             <div class="suggested-user">
-                                <a href="{{ route('profile', $user) }}">
+                                <a href="{{ route('profile') }}">
                                     @if($user->avatar)
                                         <img src="{{ $user->avatar_url }}" alt="{{ $user->nickname ?? $user->name }}" class="user-avatar">
                                     @else

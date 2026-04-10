@@ -18,7 +18,8 @@ class ProfileController extends Controller
     public function show(Request $request)
     {
         $user = $request->user();
-        return view('profile.show', ['user' => $user]);
+        $posts = $user->posts()->with(['latestReview', 'media'])->latest()->get();
+        return view('profile.show', ['user' => $user, 'posts' => $posts]);
     }
 
     public function edit(Request $request)

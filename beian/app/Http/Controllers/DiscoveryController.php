@@ -12,28 +12,20 @@ class DiscoveryController extends Controller
         // 获取当前选中的分类
         $currentCategory = $request->get('category');
 
-        // 按时间排序的帖子（支持分类筛选），会员用户优先
+        // 按时间排序的帖子（支持分类筛选）
         $postsQuery = Post::with(['user', 'media', 'likes', 'favorites'])
-            ->leftJoin('memberships', function($join) {
-                $join->on('posts.user_id', '=', 'memberships.user_id')
-                     ->where('memberships.status', '=', 'active')
-                     ->where(function($query) {
-                         $query->whereNull('memberships.expires_at')
-                               ->orWhere('memberships.expires_at', '>', now());
-                     });
-            })
-            ->select('posts.*')
-            ->orderByRaw('CASE WHEN memberships.id IS NOT NULL THEN 0 ELSE 1 END')
+            ->approved()
             ->orderBy('posts.created_at', 'desc');
 
         if ($currentCategory && $currentCategory !== 'all') {
             $postsQuery->where('posts.category', $currentCategory);
         }
 
-        $posts = $postsQuery->paginate(12);
+        $posts = $postsQuery->paginate(12)->withQueryString();
 
         // 点赞最多的前10条
         $mostLikedPosts = Post::with(['user', 'media'])
+            ->approved()
             ->withCount('likes')
             ->orderBy('likes_count', 'desc')
             ->take(10)
@@ -41,6 +33,7 @@ class DiscoveryController extends Controller
 
         // 收藏最多的前10条
         $mostFavoritedPosts = Post::with(['user', 'media'])
+            ->approved()
             ->withCount('favorites')
             ->orderBy('favorites_count', 'desc')
             ->take(10)
@@ -87,7 +80,8 @@ class DiscoveryController extends Controller
         $query = $request->get('q');
         $category = $request->get('category', 'all');
 
-        $postsQuery = Post::with(['user', 'media', 'likes', 'favorites']);
+        $postsQuery = Post::with(['user', 'media', 'likes', 'favorites'])
+            ->approved();
 
         if ($query) {
             $postsQuery->where(function($q) use ($query) {
@@ -104,7 +98,7 @@ class DiscoveryController extends Controller
             $postsQuery->where('category', $category);
         }
 
-        $posts = $postsQuery->latest()->paginate(12);
+        $posts = $postsQuery->latest()->paginate(12)->withQueryString();
 
         $categories = [
             'all' => '全部内容',

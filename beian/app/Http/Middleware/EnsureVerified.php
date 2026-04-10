@@ -6,17 +6,15 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckMembership
+class EnsureVerified
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || !auth()->user()->isMember()) {
-            return redirect()->route('membership')->with('error', '此功能需要会员权限。');
+        if (! $request->user() || ! $request->user()->isVerified()) {
+            return redirect()->route('identity.status')->with('error', '请先完成实名认证。');
         }
 
         return $next($request);

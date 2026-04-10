@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>首页</title>
-    <link rel="stylesheet" href="/build/assets/app.css">
+    <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
     <style>
     :root{--bg:#f8fafc;--card:#ffffff;--accent:#2563eb;--muted:#6b7280}
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;background:var(--bg)}
@@ -74,6 +74,16 @@
                         </div>
                     </div>
                 @endfor
+            </div>
+        </div>
+    </section>
+
+    <section style="padding:28px 12px;background:#f8fafc;">
+        <div class="container" style="max-width:1200px;">
+            <div style="background:#ffffff;border-radius:16px;padding:24px;box-shadow:0 8px 24px rgba(16,24,40,0.08);">
+                <h2 style="margin-top:0;font-size:24px;color:#111827;">旅行内容由用户发布，平台负责展示与管理</h2>
+                <p style="margin:12px 0 0;color:#4b5563;font-size:16px;line-height:1.8;">波斯圈是一个旅行信息发布与分享平台，平台本身不产生内容。所有游记、路线、经验和建议均由用户发布，平台仅提供信息展示、存储、审核和发布工具。</p>
+                <p style="margin:12px 0 0;color:#4b5563;font-size:16px;line-height:1.8;">平台会员费用作为技术服务费，用于支持发布能力、内容管理和系统运营。</p>
             </div>
         </div>
     </section>
