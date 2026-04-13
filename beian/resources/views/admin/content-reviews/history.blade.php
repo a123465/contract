@@ -6,25 +6,28 @@
     <title>审核历史 - {{ config('app.name', '波斯圈') }}</title>
     <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
     <style>
-        body { margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,sans-serif; background:#f3f4f6; color:#111; }
-        .container { max-width:1140px; margin:0 auto; padding:24px; }
-        .header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:24px; }
-        .header h1 { margin:0; font-size:2rem; }
-        .header .hint { color:#6b7280; }
-        .review-table { width:100%; border-collapse:collapse; background:#fff; border:1px solid #e5e7eb; border-radius:16px; overflow:hidden; }
-        .review-table th, .review-table td { padding:16px 14px; text-align:left; border-bottom:1px solid #f3f4f6; }
-        .review-table th { background:#f8fafc; color:#334155; font-weight:700; font-size:14px; }
-        .review-table tr:last-child td { border-bottom:0; }
-        .status-badge { display:inline-flex; align-items:center; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700; }
+        body { margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,sans-serif; background:#f8fafc; color:#0f172a; }
+        .container { max-width:1180px; margin:0 auto; padding:28px 24px 40px; }
+        .header { display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:22px; }
+        .page-title { margin:0; font-size:2.3rem; letter-spacing:-0.03em; }
+        .hint { color:#475569; max-width:640px; margin-top:10px; font-size:0.98rem; line-height:1.75; }
+        .top-actions { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:flex-end; }
+        .back-link { text-decoration:none; color:#2563eb; font-weight:600; }
+        .review-table { width:100%; border-collapse:separate; border-spacing:0; background:#fff; border-radius:24px; overflow:hidden; box-shadow:0 30px 70px rgba(15,23,42,0.08); }
+        .review-table th, .review-table td { padding:18px 16px; vertical-align:top; }
+        .review-table th { background:#f8fafc; color:#334155; font-weight:700; font-size:0.93rem; letter-spacing:0.02em; text-transform:uppercase; border-bottom:1px solid #e2e8f0; }
+        .review-table tbody tr { border-bottom:1px solid #f1f5f9; }
+        .review-table tbody tr:last-child td { border-bottom:0; }
+        .review-table tbody tr:hover td { background:#f8fbff; }
+        .status-badge { display:inline-flex; align-items:center; justify-content:center; padding:7px 12px; border-radius:999px; font-size:12px; font-weight:700; letter-spacing:0.01em; text-transform:capitalize; }
         .status-approved { background:#dcfce7; color:#166534; }
         .status-rejected, .status-removed { background:#fee2e2; color:#b91c1c; }
-        .small-text { color:#64748b; font-size:13px; }
-        .pagination { margin-top:20px; display:flex; justify-content:center; }
-        .review-summary { margin-bottom:16px; display:flex; gap:16px; flex-wrap:wrap; }
-        .review-summary div { background:#fff; padding:16px 18px; border-radius:16px; border:1px solid #e5e7eb; box-shadow:0 8px 24px rgba(15,23,42,0.04); }
-        .review-summary strong { display:block; font-size:1.5rem; }
-        .review-summary span { color:#64748b; margin-top:4px; display:block; }
-        .back-link { text-decoration:none; color:#2563eb; }
+        .small-text { color:#64748b; font-size:0.88rem; line-height:1.6; }
+        .pagination { margin-top:22px; display:flex; justify-content:center; }
+        .review-summary { margin-bottom:24px; display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:16px; }
+        .stat-card { background:#fff; border:1px solid rgba(148,163,184,0.24); border-radius:20px; padding:20px 22px; box-shadow:0 20px 40px rgba(15,23,42,0.06); }
+        .stat-card strong { display:block; font-size:1.85rem; line-height:1; color:#111827; }
+        .stat-card span { margin-top:8px; display:block; color:#64748b; font-size:0.95rem; }
     </style>
 </head>
 <body>
@@ -32,18 +35,20 @@
     <div class="container">
         <div class="header">
             <div>
-                <h1>审核历史</h1>
+                <h1 class="page-title">审核历史</h1>
                 <div class="hint">展示已处理的帖子审核记录，便于管理员回溯审批结果。</div>
             </div>
-            <a href="{{ route('reviews.index') }}" class="back-link">返回待审列表</a>
+            <div class="top-actions">
+                <a href="{{ route('reviews.index') }}" class="back-link">返回待审列表</a>
+            </div>
         </div>
 
         <div class="review-summary">
-            <div>
+            <div class="stat-card">
                 <strong>{{ $reviews->total() }}</strong>
                 <span>历史记录</span>
             </div>
-            <div>
+            <div class="stat-card">
                 <strong>{{ $reviews->count() }}</strong>
                 <span>当前页</span>
             </div>

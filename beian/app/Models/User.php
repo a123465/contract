@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
@@ -96,6 +97,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Post::class, 'post_favorites')->withTimestamps();
     }
 
+    public function membership(): HasOne
+    {
+        return $this->hasOne(Membership::class);
+    }
 
     public function isModerator()
     {
@@ -104,7 +109,7 @@ class User extends Authenticatable
 
     public function isMember()
     {
-        return isset($this->role) && $this->role === 'member';
+        return isset($this->role) && $this->role === 'member' && $this->membership && $this->membership->isActive();
     }
 
     public function isVerified()

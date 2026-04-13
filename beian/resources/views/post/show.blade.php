@@ -37,6 +37,12 @@
 <body>
     @include('partials.navbar')
     <div class="container">
+        @if(session('success'))
+            <div class="alert" style="background:#dcfce7;color:#14532d;border-color:#86efac;">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <article class="post-header">
             <h1 class="post-title">{{ $post->title }}</h1>
             @if(Auth::check() && Auth::id() === $post->user_id && !$post->isApproved())
@@ -264,7 +270,6 @@
                         </button>
                     </form>
                     @if(auth()->check() && auth()->id() === $post->user_id)
-                        <a href="{{ route('posts.edit', $post) }}" class="action-btn" style="margin-left:8px">编辑</a>
                         <form method="POST" action="{{ route('posts.destroy', $post) }}" class="confirm-delete" style="display:inline;margin-left:8px">
                             @csrf
                             @method('DELETE')

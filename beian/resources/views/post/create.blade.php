@@ -120,6 +120,10 @@
                     @enderror
                 </div>
 
+                <div class="card" style="background:#eff6ff;border:1px solid #bfdbfe;color:#0f172a;margin-bottom:16px">
+                    <p style="margin:0;font-size:0.95rem;line-height:1.8">发布后帖子将进入审核流程，审核通过后才会在发现页面展示。您可以在个人中心查看审核状态。</p>
+                </div>
+
                 <button type="submit" class="btn-submit">发布分享</button>
             </div>
         </form>

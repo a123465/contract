@@ -153,7 +153,8 @@ class PostController extends Controller
             }
         }
 
-        return redirect()->to('/discovery')->with('success', '旅行分享发布成功！');
+        return redirect()->route('posts.show', $post)
+            ->with('success', '发布成功，帖子已提交审核。审核通过后将会展示在发现页面。');
     }
 
     public function update(Request $request, Post $post)

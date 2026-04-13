@@ -375,6 +375,84 @@
         border-color: var(--accent-dark);
     }
 
+    .hero-note {
+        font-size: 1rem;
+        margin-top: 16px;
+        color: rgba(255,255,255,0.92);
+        max-width: 760px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 16px;
+    }
+
+    .section-card {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid #e5e7eb;
+        padding: 28px;
+        box-shadow: 0 18px 30px rgba(15,23,42,0.06);
+        margin-bottom: 32px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+    }
+
+    .info-block {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .info-block h3 {
+        margin: 0 0 12px 0;
+        font-size: 1.05rem;
+        color: #111827;
+    }
+
+    .info-block p,
+    .info-block li {
+        margin: 0;
+        color: #475569;
+        font-size: 0.98rem;
+        line-height: 1.8;
+    }
+
+    .faq-section {
+        margin-bottom: 40px;
+    }
+
+    .faq-item {
+        margin-bottom: 20px;
+        padding: 22px;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        background: white;
+    }
+
+    .faq-question {
+        margin: 0 0 10px 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .faq-answer {
+        margin: 0;
+        color: #475569;
+        font-size: 0.98rem;
+        line-height: 1.75;
+    }
+
     .alert {
         padding: 16px 20px;
         border-radius: 12px;
@@ -414,6 +492,7 @@
         <div class="hero-content">
             <h1 class="hero-title">会员中心</h1>
             <p class="hero-subtitle">会员订阅为平台技术服务费，用于保障您的内容发布、展示与审核管理能力。</p>
+            <p class="hero-note">本平台会员费属于技术服务费，用于支持系统维护、内容审核、信息存储和发布服务，不代表内容创作或推广担保。</p>
         </div>
     </div>
 
@@ -471,34 +550,10 @@
                                 <li class="feature-item">无限发布旅行帖子</li>
                                 <li class="feature-item">优先内容审核与展示支持</li>
                                 <li class="feature-item">优先内容展示</li>
-                                <li class="feature-item">基础数据统计</li>
                                 <li class="feature-item">专属会员标识</li>
                                 <li class="feature-item">高级搜索功能</li>
                             </ul>
                         </div>
-
-                        <!-- 暂时隐藏高级会员
-                        <div class="plan-card premium" onclick="selectPlan('premium')">
-                            <input type="radio" name="plan" value="premium" class="plan-radio">
-
-                            <div class="plan-header">
-                                <h3 class="plan-name">高级会员</h3>
-                                <div class="plan-price">
-                                    <span class="currency">¥</span>
-                                    <span>20</span>
-                                    <span class="period">/月</span>
-                                </div>
-                            </div>
-
-                            <ul class="plan-features">
-                                <li class="feature-item">所有基础会员特权</li>
-                                <li class="feature-item">专属客服支持</li>
-                                <li class="feature-item">高级数据分析</li>
-                                <li class="feature-item">独家内容访问</li>
-                                <li class="feature-item">定制化推荐</li>
-                            </ul>
-                        </div>
-                        -->
                     </div>
 
                     <div class="subscribe-section">
@@ -508,26 +563,100 @@
                     </div>
                 </form>
             </div>
+
         @else
-            <div class="login-prompt">
-                <h2>🔐 请先登录</h2>
-                <p>要查看会员信息并享受专属特权，请先登录您的账户</p>
-                <div class="login-links">
-                    <a href="{{ route('login') }}" class="btn-login">登录</a>
-                    <a href="{{ route('register') }}" class="btn-register">注册</a>
+            <div class="plans-section">
+                <h2 class="plans-title">会员权益与订阅</h2>
+                <p class="plans-subtitle">注册并登录后可订阅会员，享受以下专属特权：</p>
+                <div class="plans-grid">
+                    <div class="plan-card">
+                        <div class="plan-header">
+                            <h3 class="plan-name">基础会员</h3>
+                            <div class="plan-price">
+                                <span class="currency">¥</span>
+                                <span>10</span>
+                                <span class="period">/月</span>
+                            </div>
+                        </div>
+                        <ul class="plan-features">
+                            <li class="feature-item">无限发布旅行帖子</li>
+                            <li class="feature-item">优先内容审核与展示支持</li>
+                            <li class="feature-item">优先内容展示</li>
+                            <li class="feature-item">专属会员标识</li>
+                            <li class="feature-item">高级搜索功能</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="subscribe-section">
+                    <a href="{{ route('login') }}" class="btn-subscribe" style="margin-right:16px">登录后订阅</a>
+                    <a href="{{ route('register') }}" class="btn-subscribe" style="background:var(--accent);">注册新用户</a>
                 </div>
             </div>
         @endif
-    </div>
+
+        <div class="section-card">
+            <div class="section-title">支付方式说明</div>
+            <div class="info-grid">
+                <div class="info-block">
+                    <h3>支持支付渠道</h3>
+                    <p>当前支持的会员支付方式包括：</p>
+                    <ul>
+                        <li>微信支付</li>
+                        <li>支付宝</li>
+                        <li>银行卡在线支付（根据实际页面展示而定）</li>
+                    </ul>
+                    <p>请在支付过程中按照页面提示选择对应渠道完成付款。</p>
+                </div>
+                <div class="info-block">
+                    <h3>服务性质说明</h3>
+                    <p>会员费用为技术服务费，用于平台的系统维护、内容审核、信息存储和功能支持。</p>
+                    <p>本费用不构成内容推广或展示效果保证，仅用于保障您在平台上的持续发布与管理体验。</p>
+                </div>
+                <div class="info-block">
+                    <h3>退订与续费规则</h3>
+                    <p>会员订阅后，您可以在个人中心中取消续费或停止续费。</p>
+                    <p>当前计费周期结束后，会员权益将自动停止，会员不会自动续费。</p>
+                    <p>请注意：本平台目前不提供自动续费功能，续费需要您手动确认。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section section-card">
+            <div class="section-title">常见问题（FAQ）</div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">如何支付会员费用？</h3>
+                <p class="faq-answer">在会员页面选择订阅计划后，按页面提示选择支付渠道，可使用微信支付、支付宝或其他支持的在线支付方式完成支付。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">会员费用是什么性质？</h3>
+                <p class="faq-answer">平台会员费用为技术服务费，用于保障内容发布、审核、存储和系统维护服务，不代表对内容传播效果的保证。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">如何取消会员？</h3>
+                <p class="faq-answer">请在个人中心进入会员管理或订阅设置，选择取消续费或终止当前会员服务。取消后，当前计费周期结束时会员权益即停止。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">会员是否自动续费？</h3>
+                <p class="faq-answer">会员到期后会自动取消，不会自动续费。续费需要您在会员到期后手动再次订阅。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">如何开具发票？</h3>
+                <p class="faq-answer">如需发票，请在支付后联系平台客服或查看会员服务协议中的发票说明。平台会根据实际运营规则提供电子发票或纸质发票服务。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">会员费用是否支持退款？</h3>
+                <p class="faq-answer">会员费用一般作为技术服务费收取，已发生周期内通常不支持退款。若因平台原因导致服务异常，可联系平台客服协调处理。</p>
+            </div>
+        </div>
 
     <script>
         function selectPlan(planType) {
-            // 移除所有卡片的选中状态
-            document.querySelectorAll('.plan-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-
-            // 选中对应的卡片
             const selectedCard = document.querySelector(`input[name="plan"][value="${planType}"]`).closest('.plan-card');
             selectedCard.classList.add('selected');
 

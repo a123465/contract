@@ -33,8 +33,52 @@ Route::get('/membership', function () {
 })->name('membership');
 
 Route::post('/membership/subscribe', function (Request $request) {
-    return back()->with('success', '会员订阅功能暂未开放。');
+    $data = $request->validate([
+        'plan' => ['required', 'in:basic,premium'],
+    ]);
+
+    return redirect()->route('membership.checkout', ['plan' => $data['plan']]);
 })->middleware('auth')->name('membership.subscribe');
+
+Route::get('/membership/checkout', function (Request $request) {
+    $user = Auth::user();
+    $plan = $request->query('plan', 'basic');
+
+    if (! in_array($plan, ['basic', 'premium'], true)) {
+        abort(404);
+    }
+
+    return view('membership.checkout', ['user' => $user, 'plan' => $plan]);
+})->middleware('auth')->name('membership.checkout');
+
+Route::post('/membership/complete', function (Request $request) {
+    $data = $request->validate([
+        'plan' => ['required', 'in:basic,premium'],
+        'payment_method' => ['required', 'in:wechat,alipay,bank_transfer'],
+    ]);
+
+    $user = Auth::user();
+    $membership = $user->membership;
+
+    $membershipData = [
+        'plan' => $data['plan'],
+        'status' => 'active',
+        'expires_at' => now()->addMonth(),
+        'payment_method' => $data['payment_method'],
+    ];
+
+    if ($membership) {
+        $membership->fill($membershipData);
+        $membership->save();
+    } else {
+        $user->membership()->create($membershipData);
+    }
+
+    $user->role = 'member';
+    $user->save();
+
+    return redirect()->route('membership')->with('success', '支付完成，会员订阅已激活。');
+})->middleware('auth')->name('membership.complete');
 
 Route::view('/about', 'about')->name('about');
 Route::view('/membership-service-agreement', 'legal.membership-service-agreement')->name('membership.service');
@@ -51,8 +95,6 @@ Route::get('/discovery', [DiscoveryController::class, 'index'])->name('discovery
 Route::get('/posts/create', [PostController::class, 'create'])->middleware('auth')->name('posts.create');
 Route::post('/posts', [PostController::class, 'store'])->middleware('auth')->name('posts.store');
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
-Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->middleware('auth')->name('posts.edit');
-Route::put('/posts/{post}', [PostController::class, 'update'])->middleware('auth')->name('posts.update');
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->middleware('auth')->name('posts.destroy');
 Route::delete('/posts/{post}/media/{media}', [PostController::class, 'destroyMedia'])->middleware('auth')->name('posts.media.destroy');
 Route::post('/posts/{post}/like', [PostController::class, 'toggleLike'])->middleware('auth')->name('posts.like');
